@@ -15,11 +15,18 @@
 import java.util.Scanner;
 
 public class Hangman {
+
+    // Three word lists
+    private static final String[] ANIMALS   = {"cat", "dog", "elephant", "tiger", "lion"};
+    private static final String[] FOODS     = {"pizza", "burger", "pasta", "taco", "sushi"};
+    private static final String[] COUNTRIES = {"france", "brazil", "japan", "egypt", "canada"};
+
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
 
         // Word list
         String[] words = {"write", "that", "program", "java", "computer", "game"};
+
 
         // Game loop
         String playAgain;
