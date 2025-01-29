@@ -1,19 +1,33 @@
+/**
+ * A simple console-based Hangman game.
+ *
+ * This program randomly selects a word from a predefined array
+ * and allows the user to guess the word one letter at a time.
+ *
+ * When the user finishes guessing the word (or chooses to stop),
+ * the program shows the total number of misses and offers to start
+ * a new game.
+ *
+ * @author Smit Patel
+ * @version 1.0
+ */
+
 import java.util.Scanner;
 
 public class Hangman {
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
 
-        // 1. Word list
+        // Word list
         String[] words = {"write", "that", "program", "java", "computer", "game"};
 
-        // 2. Game loop
+        // Game loop
         String playAgain;
         do {
-            // 2a. Pick a random word from the array
+            // Pick a random word from the array
             String secretWord = words[(int)(Math.random() * words.length)];
 
-            // 2b. Create a masked char array (all asterisks)
+            // Create a masked char array (all asterisks)
             char[] maskedWord = new char[secretWord.length()];
             for (int i = 0; i < maskedWord.length; i++) {
                 maskedWord[i] = '*';
@@ -27,13 +41,11 @@ public class Hangman {
 
                 // Check if the guess is correct
                 if (!revealLetter(secretWord, maskedWord, guess)) {
-                    // If revealLetter returns false, the guess was not in the word
+
                     if (!alreadyGuessed(maskedWord, guess)) {
                         missedCount++;
                         System.out.println(guess + " is not in the word");
                     } else {
-                        // If we get here, it means the letter is in the word,
-                        // but it was already revealed
                         System.out.println(guess + " is already in the word");
                     }
                 }
@@ -43,7 +55,7 @@ public class Hangman {
             System.out.println("The word is " + secretWord + ". You missed " + missedCount +
                     (missedCount <= 1 ? " time" : " times"));
 
-            // 2c. Ask if the user wants to play again
+            // Ask if the user wants to play again
             System.out.print("Do you want to guess another word? Enter y or n> ");
             playAgain = input.next();
         } while (playAgain.equalsIgnoreCase("y"));
