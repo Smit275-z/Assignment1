@@ -9,7 +9,7 @@
  * a new game.
  *
  * @author Smit Patel
- * @version 1.0
+ * @version 2.0
  */
 
 import java.util.Scanner;
