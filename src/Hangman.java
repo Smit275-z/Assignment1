@@ -18,29 +18,28 @@ public class Hangman {
         int choice;
 
         do {
-            // Display the menu
+            // Display menu
             System.out.println("\n=== HANGMAN MENU ===");
             System.out.println("1) Animals");
             System.out.println("2) Foods");
             System.out.println("3) Countries");
             System.out.println("4) Exit");
             System.out.print("Choose a topic (1-4): ");
-
             choice = input.nextInt();
             input.nextLine(); // consume leftover newline
 
             switch (choice) {
                 case 1:
                     System.out.println("\n--- HANGMAN: ANIMALS ---");
-                    playHangman(ANIMALS, input);
+                    playHangmanFromFile("animals.txt", input);
                     break;
                 case 2:
                     System.out.println("\n--- HANGMAN: FOODS ---");
-                    playHangman(FOODS, input);
+                    playHangmanFromFile("foods.txt", input);
                     break;
                 case 3:
                     System.out.println("\n--- HANGMAN: COUNTRIES ---");
-                    playHangman(COUNTRIES, input);
+                    playHangmanFromFile("countries.txt", input);
                     break;
                 case 4:
                     System.out.println("Goodbye!");
