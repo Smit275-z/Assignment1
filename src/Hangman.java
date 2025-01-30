@@ -4,8 +4,8 @@ import java.util.Scanner;
  * Demonstrates a menu-driven Hangman game with three different word lists.
  *
  * @author Smit Patel
- * Date: 1/28/2025
- * @version 2.0
+ * Date: 1/29/2025
+ * @version 3.0
  */
 public class Hangman {
     // Three word lists (3 different "versions" or "topics")
