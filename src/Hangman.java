@@ -1,17 +1,20 @@
-import java.util.Scanner;
-
 /**
- * Demonstrates a menu-driven Hangman game with three different word lists.
+ * Hangman game that reads word lists from files (one file per topic).
+ *
+ * Assignment 3: Demonstrates reading from text files instead of
+ * hard-coded arrays.
  *
  * @author Smit Patel
- * Date: 1/29/2025
+ * Date: 30/01/2025
  * @version 3.0
  */
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Scanner;
+
 public class Hangman {
-    // Three word lists (3 different "versions" or "topics")
-    private static final String[] ANIMALS   = {"cat", "dog", "elephant", "tiger", "lion"};
-    private static final String[] FOODS     = {"pizza", "burger", "pasta", "taco", "sushi"};
-    private static final String[] COUNTRIES = {"france", "brazil", "japan", "egypt", "canada"};
 
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
@@ -26,20 +29,20 @@ public class Hangman {
             System.out.println("4) Exit");
             System.out.print("Choose a topic (1-4): ");
             choice = input.nextInt();
-            input.nextLine(); // consume leftover newline
+            input.nextLine();
 
             switch (choice) {
                 case 1:
                     System.out.println("\n--- HANGMAN: ANIMALS ---");
-                    playHangmanFromFile("animals.txt", input);
+                    playHangmanFromFile("src/animals.txt", input);
                     break;
                 case 2:
                     System.out.println("\n--- HANGMAN: FOODS ---");
-                    playHangmanFromFile("foods.txt", input);
+                    playHangmanFromFile("src/foods.txt", input);
                     break;
                 case 3:
                     System.out.println("\n--- HANGMAN: COUNTRIES ---");
-                    playHangmanFromFile("countries.txt", input);
+                    playHangmanFromFile("src/countries.txt", input);
                     break;
                 case 4:
                     System.out.println("Goodbye!");
@@ -53,11 +56,16 @@ public class Hangman {
     }
 
     /**
-     * Plays one round of Hangman using the given array of words.
+     * Reads words from the specified file and plays Hangman with them.
      */
-    public static void playHangman(String[] words, Scanner input) {
-        // Randomly pick a word from the chosen topic array
-        String secretWord = words[(int) (Math.random() * words.length)];
+    public static void playHangmanFromFile(String fileName, Scanner input) {
+        ArrayList<String> wordList = readWordsFromFile(fileName);
+        if (wordList.isEmpty()) {
+            System.out.println("No words found in " + fileName + ". Exiting this topic...");
+            return;
+        }
+
+        String secretWord = wordList.get((int)(Math.random() * wordList.size()));
         char[] maskedWord = new char[secretWord.length()];
         for (int i = 0; i < maskedWord.length; i++) {
             maskedWord[i] = '*';
@@ -71,8 +79,7 @@ public class Hangman {
 
             boolean result = revealLetter(secretWord, maskedWord, guess);
             if (!result) {
-                // If the letter is not in the word or already guessed,
-                // check if it's truly not in the word or already revealed
+                // If the letter isn't revealed, check if it's not in the word
                 if (!alreadyGuessed(maskedWord, guess)) {
                     missedCount++;
                     System.out.println(guess + " is not in the word.");
@@ -81,16 +88,36 @@ public class Hangman {
                 }
             }
         }
-
-        // Word is fully guessed
         System.out.println("The word is " + secretWord
                 + ". You missed " + missedCount
                 + (missedCount == 1 ? " time." : " times."));
     }
 
     /**
+     * Reads all words (lines) from a file into an ArrayList.
+     *
+     * @param fileName the file path (e.g. "animals.txt")
+     * @return an ArrayList of words
+     */
+    public static ArrayList<String> readWordsFromFile(String fileName) {
+        ArrayList<String> words = new ArrayList<>();
+        try (Scanner fileScanner = new Scanner(new File(fileName))) {
+            while (fileScanner.hasNextLine()) {
+                // If each word is on a separate line:
+                String line = fileScanner.nextLine().trim();
+                if (!line.isEmpty()) {
+                    words.add(line.toLowerCase());
+                }
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("Error: Could not find " + fileName);
+        }
+        return words;
+    }
+
+    /**
      * Reveal `guess` in `maskedWord` if it appears in `secretWord`.
-     * @return true if we revealed at least one new character, false otherwise
+     * @return true if at least one new letter was revealed
      */
     public static boolean revealLetter(String secretWord, char[] maskedWord, char guess) {
         boolean foundNewLetter = false;
@@ -104,7 +131,7 @@ public class Hangman {
     }
 
     /**
-     * Check if the word has been fully guessed (no '*' left).
+     * Check if the word is fully guessed (no '*' left).
      */
     public static boolean isWordGuessed(char[] maskedWord) {
         for (char c : maskedWord) {
@@ -116,7 +143,7 @@ public class Hangman {
     }
 
     /**
-     * Determine if the `guess` character is already revealed in `maskedWord`.
+     * Check if `guess` is already revealed in `maskedWord`.
      */
     public static boolean alreadyGuessed(char[] maskedWord, char guess) {
         for (char c : maskedWord) {
